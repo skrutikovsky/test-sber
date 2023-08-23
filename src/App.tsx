@@ -1,25 +1,32 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, {useEffect, useRef, useState} from 'react';
 import './App.css';
 
 function App() {
+    const [start, setStart] = useState(0);
+    const list = useRef<HTMLUListElement>(null)
+    const length = 100;
+      const scrollHandler = () => {
+          if (list.current !== null) {
+              const newStart = Math.floor(list.current.scrollTop / 60);
+              console.log(newStart)
+              if (newStart !== start) {
+                  setStart(newStart);
+              }
+              console.log(list.current.scrollTop)
+          }
+      };
+
+  const data = Array.from({ length: length }, (_, index) => index + 1);
+  const displayData = data.slice(start, start + 5);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+      <div>
+          <ul ref={list} id="list" onScroll={scrollHandler}>
+              <li className="field" style={{ lineHeight: 60 * start + "px"}}></li>
+              {displayData.map((x) => (<li key={x}>{x}</li>))}
+              <li className="field" style={{ lineHeight: (length - start - 5 ) * 50 + "px"}}></li>
+          </ul>
+      </div>
   );
 }
 
